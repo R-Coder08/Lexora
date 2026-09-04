@@ -3,206 +3,593 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lexora — Learn Vocabulary & Parts of Speech</title>
+  <title>Lexora — Visual Vocabulary &amp; Grammar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@500;600;700&family=Noto+Sans+Devanagari:wght@500;600;700&display=swap" rel="stylesheet">
   
   <style>
+    /* Light Theme (Default) */
     :root {
       --bg: #e0e5ec;
       --light-shadow: #ffffff;
       --dark-shadow: #a3b1c6;
       --primary: #4d7cfe;
+      --primary-glow: rgba(77, 124, 254, 0.35);
       --text-main: #2d3748;
       --text-muted: #718096;
+      --card-bg: #e0e5ec;
+      --accent-hi: #e67e22;
+      --accent-bn: #00b4d8;
+      --danger: #e63946;
       --card-radius: 20px;
-      --elevated: 8px 8px 18px var(--dark-shadow), -8px -8px 18px var(--light-shadow);
-      --elevated-sm: 4px 4px 10px var(--dark-shadow), -4px -4px 10px var(--light-shadow);
-      --inset: inset 5px 5px 10px var(--dark-shadow), inset -5px -5px 10px var(--light-shadow);
-      --inset-sm: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
+      --elevated: 7px 7px 16px var(--dark-shadow), -7px -7px 16px var(--light-shadow);
+      --elevated-sm: 4px 4px 9px var(--dark-shadow), -4px -4px 9px var(--light-shadow);
+      --inset: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+      --inset-sm: inset 2px 2px 5px var(--dark-shadow), inset -2px -2px 5px var(--light-shadow);
+      --transition-speed: 0.25s;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
+    /* Dark Mode Theme Tokens */
+    body.dark-mode {
+      --bg: #1e2229;
+      --light-shadow: #282e37;
+      --dark-shadow: #14171c;
+      --primary: #6390fc;
+      --primary-glow: rgba(99, 144, 252, 0.4);
+      --text-main: #e2e8f0;
+      --text-muted: #8e9aa8;
+      --card-bg: #1e2229;
+      --accent-hi: #f39c12;
+      --accent-bn: #38bdf8;
+      --elevated: 6px 6px 14px var(--dark-shadow), -6px -6px 14px var(--light-shadow);
+      --elevated-sm: 3px 3px 8px var(--dark-shadow), -3px -3px 8px var(--light-shadow);
+      --inset: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+      --inset-sm: inset 2px 2px 5px var(--dark-shadow), inset -2px -2px 5px var(--light-shadow);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color var(--transition-speed), color var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Splash Screen */
     #splash {
-      position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       transition: opacity 0.4s ease;
     }
     .splash-box {
-      width: 100px; height: 100px; border-radius: 26px; background: var(--bg);
-      box-shadow: var(--elevated); display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; animation: pPulse 1.5s infinite ease-in-out;
+      width: 96px;
+      height: 96px;
+      border-radius: 26px;
+      background: var(--bg);
+      box-shadow: var(--elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      animation: pulseAnim 1.6s infinite ease-in-out;
     }
-    @keyframes pPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes pulseAnim {
+      0%, 100% { transform: scale(1); box-shadow: var(--elevated); }
+      50% { transform: scale(1.05); box-shadow: 10px 10px 20px var(--dark-shadow), -10px -10px 20px var(--light-shadow); }
+    }
 
+    /* Header */
     header {
-      width: 100%; max-width: 860px; padding: 20px; display: flex; align-items: center; justify-content: space-between;
+      width: 100%;
+      max-width: 860px;
+      padding: 20px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .brand-title { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-
-    .neo-icon-btn {
-      width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--bg);
-      box-shadow: var(--elevated-sm); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--text-main);
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
     }
-    .neo-icon-btn:active { box-shadow: var(--inset-sm); }
-
-    main { width: 100%; max-width: 860px; padding: 10px 20px 60px; display: flex; flex-direction: column; gap: 20px; }
-
-    /* Modules */
-    .module-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .module-btn {
-      padding: 16px; border-radius: var(--card-radius); background: var(--bg);
-      box-shadow: var(--elevated); border: none; cursor: pointer; text-align: left;
-      transition: all 0.2s ease;
+    .brand-logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .module-btn.active { box-shadow: var(--inset); color: var(--primary); }
-    .module-btn h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-    .module-btn p { font-size: 12px; color: var(--text-muted); }
+    .brand-logo-icon svg { width: 22px; height: 22px; fill: var(--primary); }
+    .brand-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
 
-    /* Filters */
-    .search-box {
-      width: 100%; height: 50px; border-radius: 50px; background: var(--bg);
-      box-shadow: var(--inset); display: flex; align-items: center; padding: 0 20px; gap: 10px;
-    }
-    .search-box input {
-      width: 100%; border: none; background: transparent; outline: none; font-size: 15px; font-weight: 600;
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .scroll-row { width: 100%; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: none; }
-    .scroll-row::-webkit-scrollbar { display: none; }
-    .pills-holder { display: flex; gap: 8px; width: max-content; }
+    /* Neomorphic Buttons */
+    .neo-btn-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+    .neo-btn-icon:active { box-shadow: var(--inset-sm); transform: scale(0.95); }
+    .neo-btn-icon svg { width: 19px; height: 19px; fill: currentColor; }
 
-    .filter-pill {
-      min-width: 38px; height: 38px; padding: 0 14px; border-radius: 12px; border: none;
-      background: var(--bg); box-shadow: var(--elevated-sm); font-weight: 700; font-size: 13px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    /* Main Content */
+    main {
+      width: 100%;
+      max-width: 860px;
+      padding: 12px 18px 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Hub Modules Switcher */
+    .module-selector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .module-card-btn {
+      padding: 16px;
+      border-radius: var(--card-radius);
+      background: var(--bg);
+      box-shadow: var(--elevated);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+    .module-card-btn.active {
+      box-shadow: var(--inset);
+      border-color: rgba(99, 144, 252, 0.25);
+    }
+    .module-card-btn h3 { font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 3px; }
+    .module-card-btn.active h3 { color: var(--primary); }
+    .module-card-btn p { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+
+    /* Search Bar */
+    .search-neo-box {
+      width: 100%;
+      height: 50px;
+      border-radius: 50px;
+      background: var(--bg);
+      box-shadow: var(--inset);
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 10px;
+    }
+    .search-neo-box input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .search-neo-box input::placeholder { color: var(--text-muted); }
+
+    /* Enhanced A-Z Matrix (Responsive Keypad) */
+    .alpha-control-panel {
+      background: var(--bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--elevated);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .alpha-header-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .quick-action-pills {
+      display: flex;
+      gap: 6px;
+    }
+    .small-act-btn {
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .small-act-btn:active { box-shadow: var(--inset-sm); color: var(--primary); }
+
+    .alpha-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+      gap: 7px;
+    }
+    .alpha-key-btn {
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .alpha-key-btn.active {
+      box-shadow: var(--inset-sm);
+      color: var(--primary);
+      background: rgba(99, 144, 252, 0.15);
+      border: 1px solid rgba(99, 144, 252, 0.3);
+    }
+
+    /* POS 8 Pillars Matrix */
+    .pos-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 600px) {
+      .pos-matrix-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .pos-key-btn {
+      padding: 12px 10px;
+      border-radius: 14px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text-main);
+      cursor: pointer;
       text-transform: capitalize;
+      text-align: center;
     }
-    .filter-pill.active { box-shadow: var(--inset-sm); color: var(--primary); background: #d3dbe6; font-weight: 800; }
+    .pos-key-btn.active {
+      box-shadow: var(--inset-sm);
+      color: var(--primary);
+      background: rgba(99, 144, 252, 0.15);
+      border: 1px solid rgba(99, 144, 252, 0.3);
+    }
 
-    .feed-list { display: flex; flex-direction: column; gap: 16px; }
+    /* Custom Loading Radar Animation */
+    .sync-loader-wrap {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 0;
+      gap: 14px;
+    }
+    .sync-loader-wrap.active { display: flex; }
+    
+    .radar-spinner {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--bg);
+      box-shadow: var(--elevated);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .radar-spinner::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--primary);
+      animation: radarSpin 0.8s linear infinite;
+    }
+    @keyframes radarSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .sync-text { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+
+    /* Status Bar */
+    .status-bar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    /* Vocabulary Cards Feed */
+    .feed-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
     .vocab-card {
-      background: var(--bg); border-radius: var(--card-radius); box-shadow: var(--elevated);
-      padding: 20px; display: flex; flex-direction: column; gap: 10px;
+      background: var(--bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--elevated);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
     }
-    .card-top { display: flex; justify-content: space-between; align-items: center; }
-    .word-text { font-size: 20px; font-weight: 800; }
-    .pos-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; box-shadow: var(--inset-sm); color: var(--primary); }
-
-    .speak-btn {
-      width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--bg);
-      box-shadow: var(--elevated-sm); color: var(--primary); display: flex; align-items: center;
-      justify-content: center; cursor: pointer;
+    .vocab-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .speak-btn:active { box-shadow: var(--inset-sm); }
+    .word-heading-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .word-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .pos-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 7px;
+      background: var(--bg);
+      box-shadow: var(--inset-sm);
+      color: var(--primary);
+    }
 
-    .meaning-box {
-      background: rgba(255,255,255,0.4); padding: 10px 14px; border-radius: 10px;
-      border-left: 3px solid var(--primary); font-size: 15px; font-weight: 600;
+    /* Triple Listen Audio Buttons */
+    .audio-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .audio-btn {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+    .audio-btn:active, .audio-btn.speaking {
+      box-shadow: var(--inset-sm);
+      transform: scale(0.94);
+    }
+    .audio-btn.en { color: var(--primary); }
+    .audio-btn.hi { color: var(--accent-hi); }
+    .audio-btn.bn { color: var(--accent-bn); }
+    .audio-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* Meaning Section */
+    .meanings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 540px) {
+      .meanings-grid { grid-template-columns: 1fr; }
+    }
+    .meaning-tile {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: var(--inset-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .meaning-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .meaning-tile.hi .meaning-label { color: var(--accent-hi); }
+    .meaning-tile.bn .meaning-label { color: var(--accent-bn); }
+    .meaning-val {
+      font-size: 15px;
+      font-weight: 600;
       font-family: 'Noto Sans Devanagari', 'Hind Siliguri', sans-serif;
     }
-    .example-box { font-size: 13px; color: #4a5568; font-style: italic; }
 
-    .neo-load-btn {
-      width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--bg);
-      box-shadow: var(--elevated); color: var(--primary); font-size: 14px; font-weight: 700; cursor: pointer;
+    .example-quote-box {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      font-style: italic;
     }
-    .neo-load-btn:active { box-shadow: var(--inset); }
+    .example-quote-box strong {
+      font-style: normal;
+      color: var(--text-main);
+      font-weight: 700;
+    }
 
-    /* Language Modal */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(163,177,198,0.5); backdrop-filter: blur(4px);
-      z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;
-      opacity: 0; visibility: hidden; transition: all 0.2s ease;
+    /* Load More */
+    .load-more-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 50px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated);
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
     }
-    .modal-backdrop.open { opacity: 1; visibility: visible; }
-    .modal-content {
-      width: 100%; max-width: 380px; background: var(--bg); border-radius: 20px;
-      box-shadow: 12px 12px 24px var(--dark-shadow), -12px -12px 24px var(--light-shadow);
-      padding: 22px; display: flex; flex-direction: column; gap: 16px;
+    .load-more-btn:active { box-shadow: var(--inset); }
+
+    .exhaust-banner {
+      display: none;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--bg);
+      box-shadow: var(--inset-sm);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
 
+  <!-- Splash -->
   <div id="splash">
     <div class="splash-box">
       <svg width="44" height="44" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
     </div>
     <h2 style="font-weight: 800; letter-spacing: 1px;">LEXORA</h2>
-    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Vocabulary &amp; Parts of Speech</p>
+    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Smart Vocabulary &amp; Grammar</p>
   </div>
 
+  <!-- Header -->
   <header>
-    <div class="brand-title">Lexora</div>
-    <button class="neo-icon-btn" onclick="openLangModal()" title="Change Language">
-      <span id="lang-code-indicator" style="font-size: 12px; font-weight: 800; color: var(--primary);">HI</span>
-    </button>
+    <div class="brand-group" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="brand-name">Lexora</div>
+    </div>
+
+    <div class="nav-tools">
+      <!-- Real-time Sync Button -->
+      <button class="neo-btn-icon" id="manual-sync-btn" title="Refresh &amp; Sync Firestore" onclick="triggerManualSync()">
+        <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      </button>
+      <!-- Dark Mode Switcher -->
+      <button class="neo-btn-icon" id="theme-toggle-btn" title="Toggle Dark/Light Mode" onclick="toggleTheme()">
+        <svg id="theme-icon-sun" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+      </button>
+    </div>
   </header>
 
+  <!-- Main Workspace -->
   <main>
-    <!-- Section Switcher -->
-    <div class="module-nav">
-      <button class="module-btn active" id="btn-mod-vocab" onclick="setSectionMode('vocab')">
+    <!-- Section Tabs -->
+    <div class="module-selector-grid">
+      <button class="module-card-btn active" id="tab-btn-vocab" onclick="switchSection('vocab')">
         <h3>1. English Vocabulary</h3>
-        <p>A to Z Letters (Multi-filter A, F, G...)</p>
+        <p>A-Z Matrix Multi-Letter Filtering</p>
       </button>
-      <button class="module-btn" id="btn-mod-pos" onclick="setSectionMode('pos')">
+      <button class="module-card-btn" id="tab-btn-pos" onclick="switchSection('pos')">
         <h3>2. Parts of Speech</h3>
-        <p>Isolated Noun, Verb, Adjective etc.</p>
+        <p>8 Isolated Grammatical Pillars</p>
       </button>
     </div>
 
     <!-- Search Box -->
-    <div class="search-box">
+    <div class="search-neo-box">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="live-search-input" placeholder="Search word or regional meaning..." oninput="handleSearch(this.value)" />
+      <input type="text" id="lexora-search" placeholder="Type word, Hindi or Bangla meaning..." oninput="handleSearchInput(this.value)" />
     </div>
 
-    <!-- Vocabulary Mode: Multi-Letter Selector -->
-    <div id="vocab-filter-wrap" class="scroll-row">
-      <div class="pills-holder" id="alpha-pills-bar"></div>
+    <!-- Mode 1: Enhanced Responsive A-Z Matrix (No Scroll Bar) -->
+    <div class="alpha-control-panel" id="vocab-alpha-panel">
+      <div class="alpha-header-tools">
+        <span id="alpha-selected-status">Letter Matrix (All Active)</span>
+        <div class="quick-action-pills">
+          <button class="small-act-btn" onclick="selectVowels()">Vowels</button>
+          <button class="small-act-btn" onclick="resetAlphabetFilter()">Reset All</button>
+        </div>
+      </div>
+      <div class="alpha-matrix-grid" id="alpha-keypad-container">
+        <!-- 26 Responsive A-Z keys -->
+      </div>
     </div>
 
-    <!-- POS Mode: 8 Dedicated Categories Selector -->
-    <div id="pos-filter-wrap" class="scroll-row" style="display: none;">
-      <div class="pills-holder" id="pos-pills-bar"></div>
+    <!-- Mode 2: 8 Parts of Speech Selector -->
+    <div class="alpha-control-panel" id="pos-selector-panel" style="display: none;">
+      <div class="alpha-header-tools">
+        <span>Select Grammatical Category:</span>
+      </div>
+      <div class="pos-matrix-grid" id="pos-pillars-container">
+        <!-- 8 POS Buttons -->
+      </div>
     </div>
 
-    <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-      <span id="status-record-count">Loading data...</span>
-      <span id="active-filter-details"></span>
+    <!-- Custom Radar Spinner Loading Animation -->
+    <div class="sync-loader-wrap" id="sync-radar-loader">
+      <div class="radar-spinner"></div>
+      <span class="sync-text">Synchronizing Real-Time Data...</span>
     </div>
 
-    <!-- Feed -->
-    <div class="feed-list" id="feed-container"></div>
-
-    <button class="neo-load-btn" id="btn-load-more" onclick="renderNextBatch()" style="display: none;">
-      Load More Words
-    </button>
-    <div id="exhaust-msg" style="display: none; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 14px;">
-      ✨ More Vocabularies are coming.
+    <!-- Live Status Label -->
+    <div class="status-bar-row">
+      <span id="live-count-badge">0 words loaded</span>
+      <span id="live-active-info" style="color:var(--primary);">A-Z Feed</span>
     </div>
+
+    <!-- Cards Feed -->
+    <div class="feed-container" id="cards-feed">
+      <!-- Vocabulary Cards Injected Here -->
+    </div>
+
+    <!-- Pagination & Exhaust Message -->
+    <button class="load-more-btn" id="load-more-btn" onclick="renderNextBatch()">Load More Words</button>
+    <div class="exhaust-banner" id="exhaust-msg">✨ More Vocabularies are coming.</div>
   </main>
 
-  <!-- Language Selection Modal -->
-  <div class="modal-backdrop" id="lang-modal">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="font-size: 16px; font-weight: 800;">Select Meaning Language</h3>
-        <button class="neo-icon-btn" style="width: 32px; height: 32px;" onclick="closeLangModal()">✕</button>
-      </div>
-      <button class="filter-pill" style="width: 100%; height: 46px;" onclick="changeLanguage('hi')">Hindi (हिन्दी)</button>
-      <button class="filter-pill" style="width: 100%; height: 46px;" onclick="changeLanguage('bn')">Bangla (বাংলা)</button>
-    </div>
-  </div>
-
+  <!-- Firebase & Core Architecture -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDr9WJjxT2ukf9-rVqDbwPSyyS5ePQeiGc",
@@ -217,213 +604,306 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const POS_LIST = ["noun", "pronoun", "verb", "adjective", "adverb", "preposition", "conjunction", "interjection"];
+    const POS_ARRAY = ["noun", "pronoun", "verb", "adjective", "adverb", "preposition", "conjunction", "interjection"];
 
-    window.ClientState = {
-      section: 'vocab', // 'vocab' | 'pos'
-      selectedLetters: new Set(), // Multi-letter filter: A, F, G...
-      selectedPOS: 'noun', // Isolated single POS selection
+    // App Reactive State
+    window.AppState = {
+      currentSection: 'vocab', // 'vocab' | 'pos'
+      selectedLetters: new Set(), // Multi-letters: e.g. A, F, G
+      selectedPOS: 'noun',
       searchQuery: '',
-      currentLang: localStorage.getItem('lexora_lang') || 'hi',
-      vocabDataset: [],
-      posDataset: {}, // Cache per POS bucket { noun: [], adjective: [] }
-      filteredList: [],
+      currentDataset: [],
+      filteredDataset: [],
       currentIndex: 0,
-      batchSize: 20
+      batchSize: 20,
+      unsubscribeLiveListener: null
     };
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      buildAlphaPills();
-      buildPosPills();
-      updateLangBadge();
+    // Dark Mode Engine
+    window.toggleTheme = function() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('lexora_theme', isDark ? 'dark' : 'light');
+    };
 
-      // Initial Fetch
-      await loadVocabData();
+    function initTheme() {
+      const savedTheme = localStorage.getItem('lexora_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+      }
+    }
 
+    // Lifecycle Init
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      buildAlphaKeypad();
+      buildPosKeypad();
+      bindRealtimeCollection();
+
+      // Dismiss splash
       setTimeout(() => {
         const s = document.getElementById('splash');
         s.style.opacity = '0';
         setTimeout(() => s.style.display = 'none', 400);
-      }, 1500);
+      }, 1400);
     });
 
-    async function loadVocabData() {
-      document.getElementById('status-record-count').textContent = "Fetching Vocabulary...";
-      try {
-        const snap = await getDocs(query(collection(db, "vocabularies"), orderBy("word_lower", "asc")));
-        const items = [];
-        snap.forEach(d => items.push(d.data()));
-        window.ClientState.vocabDataset = items;
-        applyCurrentFilters();
-      } catch (e) {
-        document.getElementById('feed-container').innerHTML = `<p style="text-align:center; color:var(--text-muted);">Database sync issue: ${e.message}</p>`;
-      }
-    }
-
-    async function loadPosCategoryData(cat) {
-      if (window.ClientState.posDataset[cat]) {
-        applyCurrentFilters();
-        return;
-      }
-      document.getElementById('status-record-count').textContent = `Fetching isolated ${cat}s...`;
-      try {
-        const snap = await getDocs(query(collection(db, `pos_${cat}`), orderBy("word_lower", "asc")));
-        const items = [];
-        snap.forEach(d => items.push(d.data()));
-        window.ClientState.posDataset[cat] = items;
-        applyCurrentFilters();
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function buildAlphaPills() {
-      const container = document.getElementById('alpha-pills-bar');
-      container.innerHTML = '';
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter => {
-        const b = document.createElement('button');
-        b.className = 'filter-pill';
-        b.textContent = letter;
-        b.onclick = () => {
-          if (window.ClientState.selectedLetters.has(letter)) {
-            window.ClientState.selectedLetters.delete(letter);
-            b.classList.remove('active');
-          } else {
-            window.ClientState.selectedLetters.add(letter);
-            b.classList.add('active');
-          }
-          applyCurrentFilters();
-        };
-        container.appendChild(b);
+    // 1. Build Responsive A-Z Matrix (No annoying horizontal scrolling)
+    function buildAlphaKeypad() {
+      const pad = document.getElementById('alpha-keypad-container');
+      pad.innerHTML = '';
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(char => {
+        const btn = document.createElement('button');
+        btn.className = 'alpha-key-btn';
+        btn.textContent = char;
+        btn.onclick = () => toggleAlphaChar(char, btn);
+        pad.appendChild(btn);
       });
     }
 
-    function buildPosPills() {
-      const container = document.getElementById('pos-pills-bar');
-      container.innerHTML = '';
-      POS_LIST.forEach(cat => {
-        const b = document.createElement('button');
-        b.className = `filter-pill ${cat === window.ClientState.selectedPOS ? 'active' : ''}`;
-        b.textContent = cat;
-        b.onclick = () => {
-          document.querySelectorAll('#pos-pills-bar .filter-pill').forEach(el => el.classList.remove('active'));
-          b.classList.add('active');
-          window.ClientState.selectedPOS = cat;
-          loadPosCategoryData(cat);
-        };
-        container.appendChild(b);
-      });
-    }
-
-    window.setSectionMode = function(mode) {
-      window.ClientState.section = mode;
-      document.getElementById('btn-mod-vocab').classList.toggle('active', mode === 'vocab');
-      document.getElementById('btn-mod-pos').classList.toggle('active', mode === 'pos');
-      document.getElementById('vocab-filter-wrap').style.display = mode === 'vocab' ? 'block' : 'none';
-      document.getElementById('pos-filter-wrap').style.display = mode === 'pos' ? 'block' : 'none';
-
-      if (mode === 'vocab') {
-        applyCurrentFilters();
+    window.toggleAlphaChar = function(char, element) {
+      if (window.AppState.selectedLetters.has(char)) {
+        window.AppState.selectedLetters.delete(char);
+        element.classList.remove('active');
       } else {
-        loadPosCategoryData(window.ClientState.selectedPOS);
+        window.AppState.selectedLetters.add(char);
+        element.classList.add('active');
       }
+      updateAlphaStatusText();
+      applyFiltersAndDisplay(true);
     };
 
-    window.handleSearch = function(val) {
-      window.ClientState.searchQuery = val.trim().toLowerCase();
-      applyCurrentFilters();
+    window.resetAlphabetFilter = function() {
+      window.AppState.selectedLetters.clear();
+      document.querySelectorAll('.alpha-key-btn').forEach(b => b.classList.remove('active'));
+      updateAlphaStatusText();
+      applyFiltersAndDisplay(true);
     };
 
-    function applyCurrentFilters() {
-      const { section, vocabDataset, posDataset, selectedPOS, selectedLetters, searchQuery } = window.ClientState;
-      let pool = section === 'vocab' ? vocabDataset : (posDataset[selectedPOS] || []);
+    window.selectVowels = function() {
+      window.AppState.selectedLetters = new Set(['A', 'E', 'I', 'O', 'U']);
+      document.querySelectorAll('.alpha-key-btn').forEach(b => {
+        b.classList.toggle('active', ['A','E','I','O','U'].includes(b.textContent));
+      });
+      updateAlphaStatusText();
+      applyFiltersAndDisplay(true);
+    };
 
-      let result = pool.filter(item => {
-        const w = (item.word || '').toLowerCase();
-        const first = (item.first_letter || w.charAt(0) || '').toUpperCase();
+    function updateAlphaStatusText() {
+      const count = window.AppState.selectedLetters.size;
+      const label = document.getElementById('alpha-selected-status');
+      if (count === 0) {
+        label.textContent = "Letter Matrix (All Letters Active)";
+      } else {
+        label.textContent = `Letters Active: [ ${Array.from(window.AppState.selectedLetters).join(', ')} ]`;
+      }
+    }
+
+    // 2. Build POS Grid
+    function buildPosKeypad() {
+      const pad = document.getElementById('pos-pillars-container');
+      pad.innerHTML = '';
+      POS_ARRAY.forEach(pos => {
+        const btn = document.createElement('button');
+        btn.className = `pos-key-btn ${pos === window.AppState.selectedPOS ? 'active' : ''}`;
+        btn.textContent = pos;
+        btn.onclick = () => {
+          document.querySelectorAll('.pos-key-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          window.AppState.selectedPOS = pos;
+          bindRealtimeCollection();
+        };
+        pad.appendChild(btn);
+      });
+    }
+
+    // Switch between Vocab & POS Section
+    window.switchSection = function(section) {
+      window.AppState.currentSection = section;
+      document.getElementById('tab-btn-vocab').classList.toggle('active', section === 'vocab');
+      document.getElementById('tab-btn-pos').classList.toggle('active', section === 'pos');
+      document.getElementById('vocab-alpha-panel').style.display = section === 'vocab' ? 'flex' : 'none';
+      document.getElementById('pos-selector-panel').style.display = section === 'pos' ? 'flex' : 'none';
+      bindRealtimeCollection();
+    };
+
+    // 3. Real-Time Firestore Synchronization (onSnapshot)
+    function bindRealtimeCollection() {
+      showLoader(true);
+      if (window.AppState.unsubscribeLiveListener) {
+        window.AppState.unsubscribeLiveListener(); // Unsubscribe previous listener
+      }
+
+      const { currentSection, selectedPOS } = window.AppState;
+      const targetCol = currentSection === 'vocab' ? "vocabularies" : `pos_${selectedPOS}`;
+
+      const q = query(collection(db, targetCol), orderBy("word_lower", "asc"));
+
+      window.AppState.unsubscribeLiveListener = onSnapshot(q, (snapshot) => {
+        const list = [];
+        snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+        window.AppState.currentDataset = list;
+        showLoader(false);
+        applyFiltersAndDisplay(true);
+      }, (error) => {
+        console.error("Firestore sync error:", error);
+        showLoader(false);
+      });
+    }
+
+    window.triggerManualSync = function() {
+      bindRealtimeCollection();
+    };
+
+    function showLoader(show) {
+      document.getElementById('sync-radar-loader').classList.toggle('active', show);
+      if (show) document.getElementById('cards-feed').innerHTML = '';
+    }
+
+    // Search input handler
+    window.handleSearchInput = function(val) {
+      window.AppState.searchQuery = val.trim().toLowerCase();
+      applyFiltersAndDisplay(true);
+    };
+
+    // 4. Filtering & Pagination Logic
+    function applyFiltersAndDisplay(resetPagination = false) {
+      const { currentDataset, currentSection, selectedLetters, searchQuery, selectedPOS } = window.AppState;
+
+      let result = currentDataset.filter(item => {
+        const wordLower = (item.word || '').toLowerCase();
+        const first = (item.first_letter || wordLower.charAt(0) || '').toUpperCase();
         const hi = (item.meanings?.hi || '').toLowerCase();
         const bn = (item.meanings?.bn || '').toLowerCase();
 
-        if (section === 'vocab' && selectedLetters.size > 0 && !selectedLetters.has(first)) {
+        // Multi-letter check in Vocab mode
+        if (currentSection === 'vocab' && selectedLetters.size > 0 && !selectedLetters.has(first)) {
           return false;
         }
 
+        // Live Search check
         if (searchQuery) {
-          if (!w.includes(searchQuery) && !hi.includes(searchQuery) && !bn.includes(searchQuery)) return false;
+          const matchWord = wordLower.includes(searchQuery);
+          const matchHi = hi.includes(searchQuery);
+          const matchBn = bn.includes(searchQuery);
+          if (!matchWord && !matchHi && !matchBn) return false;
         }
+
         return true;
       });
 
-      window.ClientState.filteredList = result;
-      window.ClientState.currentIndex = 0;
-      document.getElementById('feed-container').innerHTML = '';
+      window.AppState.filteredDataset = result;
 
-      // Count label
-      document.getElementById('status-record-count').textContent = `${result.length} words found`;
-      document.getElementById('active-filter-details').textContent = 
-        section === 'vocab' 
-          ? (selectedLetters.size > 0 ? `Letters: [${Array.from(selectedLetters).join(', ')}]` : 'All A-Z')
-          : `Category: ${selectedPOS.toUpperCase()}`;
+      // Update Live count label
+      document.getElementById('live-count-badge').textContent = `${result.length} words found`;
+      document.getElementById('live-active-info').textContent = 
+        currentSection === 'vocab' 
+          ? (selectedLetters.size > 0 ? `Letters: ${Array.from(selectedLetters).join(',')}` : 'All A-Z') 
+          : `POS: ${selectedPOS.toUpperCase()}`;
+
+      if (resetPagination) {
+        window.AppState.currentIndex = 0;
+        document.getElementById('cards-feed').innerHTML = '';
+      }
 
       renderNextBatch();
     }
 
     window.renderNextBatch = function() {
-      const { filteredList, currentIndex, batchSize, currentLang } = window.ClientState;
-      const feed = document.getElementById('feed-container');
-      const next = filteredList.slice(currentIndex, currentIndex + batchSize);
+      const { filteredDataset, currentIndex, batchSize } = window.AppState;
+      const feed = document.getElementById('cards-feed');
+      const loadBtn = document.getElementById('load-more-btn');
+      const exhaustBanner = document.getElementById('exhaust-msg');
 
-      next.forEach(item => {
-        const c = document.createElement('div');
-        c.className = 'vocab-card';
-        const m = item.meanings?.[currentLang] || 'N/A';
-        c.innerHTML = `
-          <div class="card-top">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="word-text">${escapeHTML(item.word)}</span>
-              <span class="pos-tag">${escapeHTML(item.pos || 'General')}</span>
+      if (filteredDataset.length === 0) {
+        feed.innerHTML = `<div style="text-align:center; padding:35px 10px; color:var(--text-muted); font-size:14px; font-weight:600;">No vocabulary found matching your filter criteria.</div>`;
+        loadBtn.style.display = 'none';
+        exhaustBanner.style.display = 'none';
+        return;
+      }
+
+      const nextItems = filteredDataset.slice(currentIndex, currentIndex + batchSize);
+
+      nextItems.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'vocab-card';
+
+        const hiMeaning = item.meanings?.hi || "N/A";
+        const bnMeaning = item.meanings?.bn || "N/A";
+
+        card.innerHTML = `
+          <div class="vocab-top-bar">
+            <div class="word-heading-wrap">
+              <span class="word-title">${escapeHTML(item.word)}</span>
+              <span class="pos-badge">${escapeHTML(item.pos || 'General')}</span>
             </div>
-            <button class="speak-btn" onclick="speakText('${escapeQuotes(item.word)}')">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-            </button>
+
+            <!-- Triple Audio Pronunciations -->
+            <div class="audio-actions-row">
+              <button class="audio-btn en" title="Pronounce English Word" onclick="playSpeech('${escapeQuotes(item.word)}', 'en-US', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <span>EN</span>
+              </button>
+              <button class="audio-btn hi" title="Listen Hindi Meaning" onclick="playSpeech('${escapeQuotes(hiMeaning)}', 'hi-IN', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <span>HI</span>
+              </button>
+              <button class="audio-btn bn" title="Listen Bangla Meaning" onclick="playSpeech('${escapeQuotes(bnMeaning)}', 'bn-IN', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <span>BN</span>
+              </button>
+            </div>
           </div>
-          <div class="meaning-box">${escapeHTML(m)}</div>
-          <div class="example-box"><strong>e.g.</strong> ${escapeHTML(item.example || 'No example sentence.')}</div>
+
+          <!-- Bilingual Meanings Grid -->
+          <div class="meanings-grid">
+            <div class="meaning-tile hi">
+              <span class="meaning-label">Hindi (हिन्दी)</span>
+              <span class="meaning-val">${escapeHTML(hiMeaning)}</span>
+            </div>
+            <div class="meaning-tile bn">
+              <span class="meaning-label">Bangla (বাংলা)</span>
+              <span class="meaning-val">${escapeHTML(bnMeaning)}</span>
+            </div>
+          </div>
+
+          <div class="example-quote-box">
+            <strong>e.g.</strong> ${escapeHTML(item.example || 'No example sentence provided.')}
+          </div>
         `;
-        feed.appendChild(c);
+        feed.appendChild(card);
       });
 
-      window.ClientState.currentIndex += next.length;
+      window.AppState.currentIndex += nextItems.length;
 
-      const hasMore = window.ClientState.currentIndex < filteredList.length;
-      document.getElementById('btn-load-more').style.display = hasMore ? 'block' : 'none';
-      document.getElementById('exhaust-msg').style.display = (filteredList.length > 0 && !hasMore) ? 'block' : 'none';
+      const hasMore = window.AppState.currentIndex < filteredDataset.length;
+      loadBtn.style.display = hasMore ? 'block' : 'none';
+      exhaustBanner.style.display = (filteredDataset.length > 0 && !hasMore) ? 'block' : 'none';
+    };
 
-      if (filteredList.length === 0) {
-        feed.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">No vocabulary records match this filter.</div>`;
+    // 5. Triple Voice Pronunciation Engine
+    window.playSpeech = function(text, langCode, btnElement) {
+      if (!text || text === "N/A" || !('speechSynthesis' in window)) {
+        return;
       }
-    };
+      window.speechSynthesis.cancel(); // Reset previous voice
 
-    window.speakText = function(txt) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(txt);
-      u.lang = 'en-US';
-      window.speechSynthesis.speak(u);
-    };
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langCode;
+      utterance.rate = 0.88;
 
-    window.openLangModal = () => document.getElementById('lang-modal').classList.add('open');
-    window.closeLangModal = () => document.getElementById('lang-modal').classList.remove('open');
-    window.changeLanguage = function(lang) {
-      window.ClientState.currentLang = lang;
-      localStorage.setItem('lexora_lang', lang);
-      updateLangBadge();
-      closeLangModal();
-      applyCurrentFilters();
+      // Smart Voice selection fallback
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        const matchedVoice = voices.find(v => v.lang === langCode || v.lang.startsWith(langCode.slice(0, 2)));
+        if (matchedVoice) utterance.voice = matchedVoice;
+      }
+
+      if (btnElement) btnElement.classList.add('speaking');
+      utterance.onend = () => { if (btnElement) btnElement.classList.remove('speaking'); };
+      utterance.onerror = () => { if (btnElement) btnElement.classList.remove('speaking'); };
+
+      window.speechSynthesis.speak(utterance);
     };
-    function updateLangBadge() {
-      document.getElementById('lang-code-indicator').textContent = window.ClientState.currentLang.toUpperCase();
-    }
 
     function escapeHTML(s) { return String(s || '').replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t])); }
     function escapeQuotes(s) { return String(s || '').replace(/'/g, "\\'"); }
