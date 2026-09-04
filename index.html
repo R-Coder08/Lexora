@@ -19,8 +19,8 @@
       --text-main: #2d3748;
       --text-muted: #718096;
       --card-bg: #e0e5ec;
-      --accent-hi: #e67e22;
-      --accent-bn: #00b4d8;
+      --accent-hi: #d97706;
+      --accent-bn: #0284c7;
       --danger: #e63946;
       --card-radius: 20px;
       --elevated: 7px 7px 16px var(--dark-shadow), -7px -7px 16px var(--light-shadow);
@@ -30,7 +30,7 @@
       --transition-speed: 0.25s;
     }
 
-    /* Dark Mode Theme Tokens */
+    /* Dark Mode Theme */
     body.dark-mode {
       --bg: #1e2229;
       --light-shadow: #282e37;
@@ -40,7 +40,7 @@
       --text-main: #e2e8f0;
       --text-muted: #8e9aa8;
       --card-bg: #1e2229;
-      --accent-hi: #f39c12;
+      --accent-hi: #f59e0b;
       --accent-bn: #38bdf8;
       --elevated: 6px 6px 14px var(--dark-shadow), -6px -6px 14px var(--light-shadow);
       --elevated-sm: 3px 3px 8px var(--dark-shadow), -3px -3px 8px var(--light-shadow);
@@ -221,12 +221,9 @@
       font-weight: 700;
       color: var(--text-muted);
     }
-    .quick-action-pills {
-      display: flex;
-      gap: 6px;
-    }
+    .quick-action-pills { display: flex; gap: 6px; }
     .small-act-btn {
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 8px;
       border: none;
       background: var(--bg);
@@ -410,6 +407,7 @@
     .audio-btn:active, .audio-btn.speaking {
       box-shadow: var(--inset-sm);
       transform: scale(0.94);
+      background: rgba(99, 144, 252, 0.15);
     }
     .audio-btn.en { color: var(--primary); }
     .audio-btn.hi { color: var(--accent-hi); }
@@ -421,6 +419,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+    .meanings-grid.single-hi, .meanings-grid.single-bn {
+      grid-template-columns: 1fr;
     }
     @media (max-width: 540px) {
       .meanings-grid { grid-template-columns: 1fr; }
@@ -446,6 +447,7 @@
       font-size: 15px;
       font-weight: 600;
       font-family: 'Noto Sans Devanagari', 'Hind Siliguri', sans-serif;
+      line-height: 1.4;
     }
 
     .example-quote-box {
@@ -486,6 +488,89 @@
       font-weight: 700;
       color: var(--text-muted);
     }
+
+    /* Settings Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+    }
+    .modal-backdrop.open { opacity: 1; visibility: visible; }
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg);
+      border-radius: 24px;
+      box-shadow: 14px 14px 28px var(--dark-shadow), -14px -14px 28px var(--light-shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .setting-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .setting-pills-row {
+      display: flex;
+      gap: 8px;
+    }
+    .set-pill-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: center;
+    }
+    .set-pill-btn.active {
+      box-shadow: var(--inset-sm);
+      color: var(--primary);
+      background: rgba(99, 144, 252, 0.15);
+    }
+    .test-voice-bar {
+      display: flex;
+      gap: 8px;
+    }
+    .test-voice-btn {
+      flex: 1;
+      padding: 9px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .test-voice-btn:active { box-shadow: var(--inset-sm); }
   </style>
 </head>
 <body>
@@ -513,9 +598,15 @@
       <button class="neo-btn-icon" id="manual-sync-btn" title="Refresh &amp; Sync Firestore" onclick="triggerManualSync()">
         <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
       </button>
+
       <!-- Dark Mode Switcher -->
       <button class="neo-btn-icon" id="theme-toggle-btn" title="Toggle Dark/Light Mode" onclick="toggleTheme()">
-        <svg id="theme-icon-sun" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+        <svg id="theme-icon" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+      </button>
+
+      <!-- Settings Modal Button -->
+      <button class="neo-btn-icon" id="settings-open-btn" title="Settings &amp; Audio Preferences" onclick="openSettingsModal()">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
       </button>
     </div>
   </header>
@@ -540,7 +631,7 @@
       <input type="text" id="lexora-search" placeholder="Type word, Hindi or Bangla meaning..." oninput="handleSearchInput(this.value)" />
     </div>
 
-    <!-- Mode 1: Enhanced Responsive A-Z Matrix (No Scroll Bar) -->
+    <!-- Mode 1: Responsive A-Z Matrix -->
     <div class="alpha-control-panel" id="vocab-alpha-panel">
       <div class="alpha-header-tools">
         <span id="alpha-selected-status">Letter Matrix (All Active)</span>
@@ -586,6 +677,50 @@
     <div class="exhaust-banner" id="exhaust-msg">✨ More Vocabularies are coming.</div>
   </main>
 
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 style="font-size: 17px; font-weight: 800;">Settings &amp; Preferences</h3>
+        <button class="neo-btn-icon" style="width: 34px; height: 34px;" onclick="closeSettingsModal()">✕</button>
+      </div>
+
+      <!-- Meaning Display Setting -->
+      <div class="setting-group">
+        <span class="setting-label">Language Display Mode</span>
+        <div class="setting-pills-row">
+          <button class="set-pill-btn active" id="lang-mode-both" onclick="setDisplayMode('both')">Dual (HI + BN)</button>
+          <button class="set-pill-btn" id="lang-mode-hi" onclick="setDisplayMode('hi')">Hindi Only</button>
+          <button class="set-pill-btn" id="lang-mode-bn" onclick="setDisplayMode('bn')">Bangla Only</button>
+        </div>
+      </div>
+
+      <!-- Speech Speed Setting -->
+      <div class="setting-group">
+        <span class="setting-label">Voice Speech Speed</span>
+        <div class="setting-pills-row">
+          <button class="set-pill-btn" id="speed-slow" onclick="setSpeechSpeed(0.75, 'speed-slow')">Slow 0.75x</button>
+          <button class="set-pill-btn active" id="speed-normal" onclick="setSpeechSpeed(0.9, 'speed-normal')">Normal 0.9x</button>
+          <button class="set-pill-btn" id="speed-fast" onclick="setSpeechSpeed(1.1, 'speed-fast')">Fast 1.1x</button>
+        </div>
+      </div>
+
+      <!-- Audio Test Lab -->
+      <div class="setting-group">
+        <span class="setting-label">Audio Test Lab (Check Crystal Clarity)</span>
+        <div class="test-voice-bar">
+          <button class="test-voice-btn" style="color:var(--primary);" onclick="playSpeech('Welcome to Lexora vocabulary', 'en-US', this)">Test EN</button>
+          <button class="test-voice-btn" style="color:var(--accent-hi);" onclick="playSpeech('नमस्ते, लेक्सोरा में आपका स्वागत है', 'hi-IN', this)">Test HI</button>
+          <button class="test-voice-btn" style="color:var(--accent-bn);" onclick="playSpeech('নমস্কার, লেক্সোরায় আপনাকে স্বাগতম', 'bn-IN', this)">Test BN</button>
+        </div>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; font-size: 11px; color: var(--text-muted); text-align: center;">
+        ✨ Natural regional voice engine enabled for Hindi &amp; Bangla.
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase & Core Architecture -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -608,18 +743,31 @@
 
     // App Reactive State
     window.AppState = {
-      currentSection: 'vocab', // 'vocab' | 'pos'
-      selectedLetters: new Set(), // Multi-letters: e.g. A, F, G
+      currentSection: 'vocab',
+      selectedLetters: new Set(),
       selectedPOS: 'noun',
       searchQuery: '',
       currentDataset: [],
       filteredDataset: [],
       currentIndex: 0,
       batchSize: 20,
+      displayMode: localStorage.getItem('lexora_display_mode') || 'both', // 'both' | 'hi' | 'bn'
+      speechSpeed: parseFloat(localStorage.getItem('lexora_speech_speed')) || 0.9,
+      voices: [],
       unsubscribeLiveListener: null
     };
 
-    // Dark Mode Engine
+    // Voice Scanner & Preloader
+    function initVoices() {
+      if ('speechSynthesis' in window) {
+        window.AppState.voices = window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.AppState.voices = window.speechSynthesis.getVoices();
+        };
+      }
+    }
+
+    // Theme Switcher
     window.toggleTheme = function() {
       const isDark = document.body.classList.toggle('dark-mode');
       localStorage.setItem('lexora_theme', isDark ? 'dark' : 'light');
@@ -632,11 +780,46 @@
       }
     }
 
+    // Settings Modal
+    window.openSettingsModal = function() {
+      document.getElementById('settings-modal').classList.add('open');
+      updateSettingsUI();
+    };
+    window.closeSettingsModal = function() {
+      document.getElementById('settings-modal').classList.remove('open');
+    };
+
+    window.setDisplayMode = function(mode) {
+      window.AppState.displayMode = mode;
+      localStorage.setItem('lexora_display_mode', mode);
+      updateSettingsUI();
+      // Instantly re-render cards
+      renderCurrentVisibleCards();
+    };
+
+    window.setSpeechSpeed = function(speed, btnId) {
+      window.AppState.speechSpeed = speed;
+      localStorage.setItem('lexora_speech_speed', speed);
+      document.querySelectorAll('.setting-group .set-pill-btn').forEach(b => {
+        if (b.id.startsWith('speed-')) b.classList.remove('active');
+      });
+      document.getElementById(btnId).classList.add('active');
+    };
+
+    function updateSettingsUI() {
+      const mode = window.AppState.displayMode;
+      document.getElementById('lang-mode-both').classList.toggle('active', mode === 'both');
+      document.getElementById('lang-mode-hi').classList.toggle('active', mode === 'hi');
+      document.getElementById('lang-mode-bn').classList.toggle('active', mode === 'bn');
+    }
+
     // Lifecycle Init
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      initVoices();
       buildAlphaKeypad();
       buildPosKeypad();
+      updateSettingsUI();
       bindRealtimeCollection();
 
       // Dismiss splash
@@ -647,7 +830,7 @@
       }, 1400);
     });
 
-    // 1. Build Responsive A-Z Matrix (No annoying horizontal scrolling)
+    // 1. Build Responsive A-Z Matrix
     function buildAlphaKeypad() {
       const pad = document.getElementById('alpha-keypad-container');
       pad.innerHTML = '';
@@ -716,7 +899,6 @@
       });
     }
 
-    // Switch between Vocab & POS Section
     window.switchSection = function(section) {
       window.AppState.currentSection = section;
       document.getElementById('tab-btn-vocab').classList.toggle('active', section === 'vocab');
@@ -726,11 +908,11 @@
       bindRealtimeCollection();
     };
 
-    // 3. Real-Time Firestore Synchronization (onSnapshot)
+    // 3. Real-Time Firestore Synchronization
     function bindRealtimeCollection() {
       showLoader(true);
       if (window.AppState.unsubscribeLiveListener) {
-        window.AppState.unsubscribeLiveListener(); // Unsubscribe previous listener
+        window.AppState.unsubscribeLiveListener();
       }
 
       const { currentSection, selectedPOS } = window.AppState;
@@ -759,13 +941,12 @@
       if (show) document.getElementById('cards-feed').innerHTML = '';
     }
 
-    // Search input handler
     window.handleSearchInput = function(val) {
       window.AppState.searchQuery = val.trim().toLowerCase();
       applyFiltersAndDisplay(true);
     };
 
-    // 4. Filtering & Pagination Logic
+    // 4. Filtering & Display Logic
     function applyFiltersAndDisplay(resetPagination = false) {
       const { currentDataset, currentSection, selectedLetters, searchQuery, selectedPOS } = window.AppState;
 
@@ -775,12 +956,10 @@
         const hi = (item.meanings?.hi || '').toLowerCase();
         const bn = (item.meanings?.bn || '').toLowerCase();
 
-        // Multi-letter check in Vocab mode
         if (currentSection === 'vocab' && selectedLetters.size > 0 && !selectedLetters.has(first)) {
           return false;
         }
 
-        // Live Search check
         if (searchQuery) {
           const matchWord = wordLower.includes(searchQuery);
           const matchHi = hi.includes(searchQuery);
@@ -793,7 +972,6 @@
 
       window.AppState.filteredDataset = result;
 
-      // Update Live count label
       document.getElementById('live-count-badge').textContent = `${result.length} words found`;
       document.getElementById('live-active-info').textContent = 
         currentSection === 'vocab' 
@@ -806,6 +984,15 @@
       }
 
       renderNextBatch();
+    }
+
+    function renderCurrentVisibleCards() {
+      const feed = document.getElementById('cards-feed');
+      feed.innerHTML = '';
+      const { filteredDataset, currentIndex } = window.AppState;
+      const countToRender = Math.max(currentIndex, 20);
+      const items = filteredDataset.slice(0, countToRender);
+      items.forEach(item => feed.appendChild(createCardDOM(item)));
     }
 
     window.renderNextBatch = function() {
@@ -822,39 +1009,26 @@
       }
 
       const nextItems = filteredDataset.slice(currentIndex, currentIndex + batchSize);
+      nextItems.forEach(item => feed.appendChild(createCardDOM(item)));
 
-      nextItems.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'vocab-card';
+      window.AppState.currentIndex += nextItems.length;
 
-        const hiMeaning = item.meanings?.hi || "N/A";
-        const bnMeaning = item.meanings?.bn || "N/A";
+      const hasMore = window.AppState.currentIndex < filteredDataset.length;
+      loadBtn.style.display = hasMore ? 'block' : 'none';
+      exhaustBanner.style.display = (filteredDataset.length > 0 && !hasMore) ? 'block' : 'none';
+    };
 
-        card.innerHTML = `
-          <div class="vocab-top-bar">
-            <div class="word-heading-wrap">
-              <span class="word-title">${escapeHTML(item.word)}</span>
-              <span class="pos-badge">${escapeHTML(item.pos || 'General')}</span>
-            </div>
+    function createCardDOM(item) {
+      const card = document.createElement('article');
+      card.className = 'vocab-card';
 
-            <!-- Triple Audio Pronunciations -->
-            <div class="audio-actions-row">
-              <button class="audio-btn en" title="Pronounce English Word" onclick="playSpeech('${escapeQuotes(item.word)}', 'en-US', this)">
-                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                <span>EN</span>
-              </button>
-              <button class="audio-btn hi" title="Listen Hindi Meaning" onclick="playSpeech('${escapeQuotes(hiMeaning)}', 'hi-IN', this)">
-                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                <span>HI</span>
-              </button>
-              <button class="audio-btn bn" title="Listen Bangla Meaning" onclick="playSpeech('${escapeQuotes(bnMeaning)}', 'bn-IN', this)">
-                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                <span>BN</span>
-              </button>
-            </div>
-          </div>
+      const hiMeaning = item.meanings?.hi || "N/A";
+      const bnMeaning = item.meanings?.bn || "N/A";
+      const mode = window.AppState.displayMode;
 
-          <!-- Bilingual Meanings Grid -->
+      let meaningsHTML = '';
+      if (mode === 'both') {
+        meaningsHTML = `
           <div class="meanings-grid">
             <div class="meaning-tile hi">
               <span class="meaning-label">Hindi (हिन्दी)</span>
@@ -864,38 +1038,101 @@
               <span class="meaning-label">Bangla (বাংলা)</span>
               <span class="meaning-val">${escapeHTML(bnMeaning)}</span>
             </div>
+          </div>`;
+      } else if (mode === 'hi') {
+        meaningsHTML = `
+          <div class="meanings-grid single-hi">
+            <div class="meaning-tile hi">
+              <span class="meaning-label">Hindi Meaning (हिन्दी)</span>
+              <span class="meaning-val">${escapeHTML(hiMeaning)}</span>
+            </div>
+          </div>`;
+      } else if (mode === 'bn') {
+        meaningsHTML = `
+          <div class="meanings-grid single-bn">
+            <div class="meaning-tile bn">
+              <span class="meaning-label">Bangla Meaning (বাংলা)</span>
+              <span class="meaning-val">${escapeHTML(bnMeaning)}</span>
+            </div>
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="vocab-top-bar">
+          <div class="word-heading-wrap">
+            <span class="word-title">${escapeHTML(item.word)}</span>
+            <span class="pos-badge">${escapeHTML(item.pos || 'General')}</span>
           </div>
 
-          <div class="example-quote-box">
-            <strong>e.g.</strong> ${escapeHTML(item.example || 'No example sentence provided.')}
+          <div class="audio-actions-row">
+            <button class="audio-btn en" title="Pronounce English Word" onclick="playSpeech('${escapeQuotes(item.word)}', 'en-US', this)">
+              <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <span>EN</span>
+            </button>
+            <button class="audio-btn hi" title="Listen Hindi Meaning" onclick="playSpeech('${escapeQuotes(hiMeaning)}', 'hi-IN', this)">
+              <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <span>HI</span>
+            </button>
+            <button class="audio-btn bn" title="Listen Bangla Meaning" onclick="playSpeech('${escapeQuotes(bnMeaning)}', 'bn-IN', this)">
+              <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <span>BN</span>
+            </button>
           </div>
-        `;
-        feed.appendChild(card);
-      });
+        </div>
 
-      window.AppState.currentIndex += nextItems.length;
+        ${meaningsHTML}
 
-      const hasMore = window.AppState.currentIndex < filteredDataset.length;
-      loadBtn.style.display = hasMore ? 'block' : 'none';
-      exhaustBanner.style.display = (filteredDataset.length > 0 && !hasMore) ? 'block' : 'none';
-    };
+        <div class="example-quote-box">
+          <strong>e.g.</strong> ${escapeHTML(item.example || 'No example sentence provided.')}
+        </div>
+      `;
+      return card;
+    }
 
-    // 5. Triple Voice Pronunciation Engine
-    window.playSpeech = function(text, langCode, btnElement) {
-      if (!text || text === "N/A" || !('speechSynthesis' in window)) {
+    // 5. Crystal-Clear Speech Synthesis Engine for EN, HI, BN
+    window.playSpeech = function(rawText, langCode, btnElement) {
+      if (!rawText || rawText === "N/A" || !('speechSynthesis' in window)) {
         return;
       }
-      window.speechSynthesis.cancel(); // Reset previous voice
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.cancel(); // Reset any active speech
+
+      // Clean text to avoid robotic pronunciation of "/" or brackets
+      let cleanText = rawText
+        .replace(/[\/\\]/g, ', ') // Replace slashes with comma pauses
+        .replace(/[\(\)\[\]]/g, '') // Remove brackets
+        .trim();
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = langCode;
-      utterance.rate = 0.88;
+      utterance.rate = window.AppState.speechSpeed || 0.9;
+      utterance.pitch = 1.0;
 
-      // Smart Voice selection fallback
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length > 0) {
-        const matchedVoice = voices.find(v => v.lang === langCode || v.lang.startsWith(langCode.slice(0, 2)));
-        if (matchedVoice) utterance.voice = matchedVoice;
+      // Smart Voice Matching Logic
+      let voices = window.AppState.voices;
+      if (!voices || voices.length === 0) {
+        voices = window.speechSynthesis.getVoices();
+      }
+
+      if (voices && voices.length > 0) {
+        let bestVoice = null;
+        if (langCode.startsWith('hi')) {
+          // Priority for Hindi: Google Hindi, Microsoft Swara, Microsoft Hemant, or any hi-* voice
+          bestVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Swara') || v.name.includes('Hemant'))) 
+                   || voices.find(v => v.lang.includes('hi') || v.lang.includes('HI'));
+        } else if (langCode.startsWith('bn')) {
+          // Priority for Bangla: Google Bangla, Microsoft Tanishaa, or any bn-* voice
+          bestVoice = voices.find(v => v.lang.includes('bn') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Tanishaa') || v.name.includes('Bashkar')))
+                   || voices.find(v => v.lang.includes('bn') || v.lang.includes('BN'));
+        } else {
+          // Priority for English: Natural US / UK voice
+          bestVoice = voices.find(v => (v.lang === 'en-US' || v.lang === 'en-GB') && (v.name.includes('Google') || v.name.includes('Natural')))
+                   || voices.find(v => v.lang.startsWith('en'));
+        }
+
+        if (bestVoice) {
+          utterance.voice = bestVoice;
+        }
       }
 
       if (btnElement) btnElement.classList.add('speaking');
