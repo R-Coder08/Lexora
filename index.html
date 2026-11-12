@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lexora — Visual Vocabulary, Grammar & Verb Forms</title>
+  <title>Lexora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@500;600;700&family=Noto+Sans+Devanagari:wght@500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* Light Theme (Default) */
     :root {
       --bg: #e0e5ec;
       --light-shadow: #ffffff;
@@ -31,7 +30,6 @@
       --transition-speed: 0.25s;
     }
 
-    /* Dark Mode Theme */
     body.dark-mode {
       --bg: #1e2229;
       --light-shadow: #282e37;
@@ -69,7 +67,6 @@
       overflow-x: hidden;
     }
 
-    /* Splash Screen */
     #splash {
       position: fixed;
       inset: 0;
@@ -98,10 +95,9 @@
       50% { transform: scale(1.05); box-shadow: 10px 10px 20px var(--dark-shadow), -10px -10px 20px var(--light-shadow); }
     }
 
-    /* Header */
     header {
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       padding: 20px 18px 10px;
       display: flex;
       align-items: center;
@@ -132,7 +128,6 @@
       gap: 10px;
     }
 
-    /* Neomorphic Buttons */
     .neo-btn-icon {
       width: 42px;
       height: 42px;
@@ -149,17 +144,15 @@
     .neo-btn-icon:active { box-shadow: var(--inset-sm); transform: scale(0.95); }
     .neo-btn-icon svg { width: 19px; height: 19px; fill: currentColor; }
 
-    /* Main Content */
     main {
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       padding: 12px 18px 70px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    /* Hub Modules Switcher (3 Columns on Desktop, Stacked/Grid on Mobile) */
     .module-selector-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -185,7 +178,6 @@
     .module-card-btn.active h3 { color: var(--primary); }
     .module-card-btn p { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
 
-    /* Search Bar */
     .search-neo-box {
       width: 100%;
       height: 50px;
@@ -208,7 +200,6 @@
     }
     .search-neo-box input::placeholder { color: var(--text-muted); }
 
-    /* Enhanced A-Z Matrix & Verb Type Filter */
     .alpha-control-panel {
       background: var(--bg);
       border-radius: var(--card-radius);
@@ -272,7 +263,6 @@
       border: 1px solid rgba(99, 144, 252, 0.3);
     }
 
-    /* POS 8 Pillars Matrix */
     .pos-matrix-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -301,7 +291,6 @@
       border: 1px solid rgba(99, 144, 252, 0.3);
     }
 
-    /* Custom Loading Radar Animation */
     .sync-loader-wrap {
       display: none;
       flex-direction: column;
@@ -337,7 +326,6 @@
     }
     .sync-text { font-size: 13px; font-weight: 700; color: var(--text-muted); }
 
-    /* Status Bar */
     .status-bar-row {
       display: flex;
       justify-content: space-between;
@@ -348,7 +336,6 @@
       padding: 0 4px;
     }
 
-    /* Vocabulary & Verb Cards Feed */
     .feed-container {
       display: flex;
       flex-direction: column;
@@ -395,37 +382,80 @@
     .pos-badge.irregular { color: var(--accent-hi); }
     .pos-badge.regular { color: var(--accent-verb); }
 
-    /* V1 - V5 Conjugation Grid */
+    /* Enhanced V1 - V5 Conjugation Grid with Individual Meanings */
     .verb-forms-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
-    @media (max-width: 650px) {
+    @media (max-width: 720px) {
       .verb-forms-grid { grid-template-columns: repeat(2, 1fr); }
     }
     .v-box {
       background: var(--bg);
       box-shadow: var(--inset-sm);
-      border-radius: 12px;
-      padding: 10px 8px;
+      border-radius: 14px;
+      padding: 12px 9px;
       text-align: center;
-      cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      justify-content: space-between;
+      gap: 5px;
+      position: relative;
     }
-    .v-box:active { transform: scale(0.96); }
+    .v-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+    }
     .v-tag {
       font-size: 10px;
       font-weight: 800;
       color: var(--primary);
       text-transform: uppercase;
     }
+    .v-mini-spk {
+      background: var(--bg);
+      box-shadow: var(--elevated-sm);
+      border: none;
+      border-radius: 6px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--primary);
+    }
+    .v-mini-spk:active { box-shadow: var(--inset-sm); }
     .v-word {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
+      cursor: pointer;
+    }
+    .v-meanings-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 2px;
+      padding-top: 5px;
+      border-top: 1px solid rgba(142, 154, 168, 0.18);
+    }
+    .v-bn {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-bn);
+      font-family: 'Hind Siliguri', sans-serif;
+      cursor: pointer;
+    }
+    .v-hi {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent-hi);
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      cursor: pointer;
     }
 
     /* Triple Listen Audio Buttons */
@@ -507,7 +537,6 @@
       font-weight: 700;
     }
 
-    /* Load More */
     .load-more-btn {
       width: 100%;
       padding: 15px;
@@ -534,7 +563,6 @@
       color: var(--text-muted);
     }
 
-    /* Settings Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -620,7 +648,6 @@
 </head>
 <body>
 
-  <!-- Splash -->
   <div id="splash">
     <div class="splash-box">
       <svg width="44" height="44" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -629,7 +656,6 @@
     <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Smart Vocabulary, Grammar & Verb Forms</p>
   </div>
 
-  <!-- Header -->
   <header>
     <div class="brand-group" onclick="window.scrollTo({top:0, behavior:'smooth'})">
       <div class="brand-logo-icon">
@@ -653,9 +679,8 @@
     </div>
   </header>
 
-  <!-- Main Workspace -->
   <main>
-    <!-- Section Tabs (3 Modules) -->
+    <!-- 3 Modules -->
     <div class="module-selector-grid">
       <button class="module-card-btn active" id="tab-btn-vocab" onclick="switchSection('vocab')">
         <h3>1. Vocabulary</h3>
@@ -666,18 +691,18 @@
         <p>8 Isolated Grammatical Pillars</p>
       </button>
       <button class="module-card-btn" id="tab-btn-verbs" onclick="switchSection('verbs')">
-        <h3>3. Verb Forms (V1-V5)</h3>
-        <p>Base, Past, Participle, -ing & s/es</p>
+        <h3>3. Verb Forms (V1–V5)</h3>
+        <p>All 5 Forms with Individual Meanings</p>
       </button>
     </div>
 
     <!-- Search Box -->
     <div class="search-neo-box">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="lexora-search" placeholder="Search word, verb form (V1-V5), Hindi or Bangla..." oninput="handleSearchInput(this.value)" />
+      <input type="text" id="lexora-search" placeholder="Search word, verb form (V1-V5), Hindi or Bangla meaning..." oninput="handleSearchInput(this.value)" />
     </div>
 
-    <!-- Mode 1 & Mode 3 Shared A-Z Matrix -->
+    <!-- A-Z Matrix -->
     <div class="alpha-control-panel" id="vocab-alpha-panel">
       <div class="alpha-header-tools">
         <span id="alpha-selected-status">Letter Matrix (All Active)</span>
@@ -691,39 +716,32 @@
           <button class="small-act-btn" onclick="resetAlphabetFilter()">Reset</button>
         </div>
       </div>
-      <div class="alpha-matrix-grid" id="alpha-keypad-container">
-        <!-- 26 Responsive A-Z keys -->
-      </div>
+      <div class="alpha-matrix-grid" id="alpha-keypad-container"></div>
     </div>
 
-    <!-- Mode 2: 8 Parts of Speech Selector -->
+    <!-- POS Selector -->
     <div class="alpha-control-panel" id="pos-selector-panel" style="display: none;">
       <div class="alpha-header-tools">
         <span>Select Grammatical Category:</span>
       </div>
-      <div class="pos-matrix-grid" id="pos-pillars-container">
-        <!-- 8 POS Buttons -->
-      </div>
+      <div class="pos-matrix-grid" id="pos-pillars-container"></div>
     </div>
 
-    <!-- Custom Radar Spinner Loading Animation -->
+    <!-- Loader -->
     <div class="sync-loader-wrap" id="sync-radar-loader">
       <div class="radar-spinner"></div>
       <span class="sync-text">Synchronizing Real-Time Data...</span>
     </div>
 
-    <!-- Live Status Label -->
+    <!-- Live Status -->
     <div class="status-bar-row">
       <span id="live-count-badge">0 items loaded</span>
       <span id="live-active-info" style="color:var(--primary);">A-Z Feed</span>
     </div>
 
-    <!-- Cards Feed -->
-    <div class="feed-container" id="cards-feed">
-      <!-- Vocabulary / Verb Cards Injected Here -->
-    </div>
+    <!-- Feed -->
+    <div class="feed-container" id="cards-feed"></div>
 
-    <!-- Pagination & Exhaust Message -->
     <button class="load-more-btn" id="load-more-btn" onclick="renderNextBatch()">Load More</button>
     <div class="exhaust-banner" id="exhaust-msg">✨ More entries are coming soon.</div>
   </main>
@@ -755,7 +773,7 @@
       </div>
 
       <div class="setting-group">
-        <span class="setting-label">Audio Test Lab (Check Crystal Clarity)</span>
+        <span class="setting-label">Audio Test Lab</span>
         <div class="test-voice-bar">
           <button class="test-voice-btn" style="color:var(--primary);" onclick="playSpeech('Welcome to Lexora vocabulary', 'en-US', this)">Test EN</button>
           <button class="test-voice-btn" style="color:var(--accent-hi);" onclick="playSpeech('नमस्ते, लेक्सोरा में आपका स्वागत है', 'hi-IN', this)">Test HI</button>
@@ -764,12 +782,11 @@
       </div>
 
       <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; font-size: 11px; color: var(--text-muted); text-align: center;">
-        ✨ Tap any V1–V5 box inside a Verb card to hear its pronunciation.
+        ✨ Tap any English word, Bangla meaning, or Hindi meaning inside V1–V5 boxes to hear its pronunciation!
       </div>
     </div>
   </div>
 
-  <!-- Firebase & Core Architecture -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
@@ -790,10 +807,10 @@
     const POS_ARRAY = ["noun", "pronoun", "verb", "adjective", "adverb", "preposition", "conjunction", "interjection"];
 
     window.AppState = {
-      currentSection: 'vocab', // 'vocab' | 'pos' | 'verbs'
+      currentSection: 'vocab',
       selectedLetters: new Set(),
       selectedPOS: 'noun',
-      verbTypeFilter: 'all', // 'all' | 'regular' | 'irregular'
+      verbTypeFilter: 'all',
       searchQuery: '',
       currentDataset: [],
       filteredDataset: [],
@@ -869,7 +886,7 @@
         const s = document.getElementById('splash');
         s.style.opacity = '0';
         setTimeout(() => s.style.display = 'none', 400);
-      }, 1200);
+      }, 1100);
     });
 
     function buildAlphaKeypad() {
@@ -923,11 +940,7 @@
     function updateAlphaStatusText() {
       const count = window.AppState.selectedLetters.size;
       const label = document.getElementById('alpha-selected-status');
-      if (count === 0) {
-        label.textContent = "Letter Matrix (All Letters Active)";
-      } else {
-        label.textContent = `Letters Active: [ ${Array.from(window.AppState.selectedLetters).join(', ')} ]`;
-      }
+      label.textContent = count === 0 ? "Letter Matrix (All Letters Active)" : `Letters Active: [ ${Array.from(window.AppState.selectedLetters).join(', ')} ]`;
     }
 
     function buildPosKeypad() {
@@ -1021,7 +1034,11 @@
           const matchWord = baseWord.includes(searchQuery);
           const matchHi = hi.includes(searchQuery);
           const matchBn = bn.includes(searchQuery);
-          const matchForms = currentSection === 'verbs' && [item.v2, item.v3, item.v4, item.v5].some(f => (f || '').toLowerCase().includes(searchQuery));
+          const matchForms = currentSection === 'verbs' && [
+            item.v2, item.v3, item.v4, item.v5,
+            item.v1_bn, item.v2_bn, item.v3_bn, item.v4_bn, item.v5_bn,
+            item.v1_hi, item.v2_hi, item.v3_hi, item.v4_hi, item.v5_hi
+          ].some(f => (f || '').toLowerCase().includes(searchQuery));
           if (!matchWord && !matchHi && !matchBn && !matchForms) return false;
         }
 
@@ -1085,11 +1102,11 @@
         return `
           <div class="meanings-grid">
             <div class="meaning-tile hi">
-              <span class="meaning-label">Hindi (हिन्दी)</span>
+              <span class="meaning-label">Root Hindi (हिन्दी)</span>
               <span class="meaning-val">${escapeHTML(hiMeaning)}</span>
             </div>
             <div class="meaning-tile bn">
-              <span class="meaning-label">Bangla (বাংলা)</span>
+              <span class="meaning-label">Root Bangla (বাংলা)</span>
               <span class="meaning-val">${escapeHTML(bnMeaning)}</span>
             </div>
           </div>`;
@@ -1112,15 +1129,37 @@
       }
     }
 
+    function buildVerbBoxHTML(tag, word, bnText, hiText) {
+      const mode = window.AppState.displayMode;
+      const bnHtml = (mode === 'both' || mode === 'bn') && bnText
+        ? `<span class="v-bn" onclick="playSpeech('${escapeQuotes(bnText)}', 'bn-IN', this)" title="Listen Bangla">${escapeHTML(bnText)}</span>`
+        : '';
+      const hiHtml = (mode === 'both' || mode === 'hi') && hiText && hiText !== 'N/A'
+        ? `<span class="v-hi" onclick="playSpeech('${escapeQuotes(hiText)}', 'hi-IN', this)" title="Listen Hindi">${escapeHTML(hiText)}</span>`
+        : '';
+
+      return `
+        <div class="v-box">
+          <div class="v-header-row">
+            <span class="v-tag">${tag}</span>
+            <button class="v-mini-spk" onclick="playSpeech('${escapeQuotes(word)}', 'en-US', this)" title="Pronounce ${word}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            </button>
+          </div>
+          <div class="v-word" onclick="playSpeech('${escapeQuotes(word)}', 'en-US', this)">${escapeHTML(word)}</div>
+          ${(bnHtml || hiHtml) ? `<div class="v-meanings-stack">${bnHtml}${hiHtml}</div>` : ''}
+        </div>
+      `;
+    }
+
     function createCardDOM(item) {
       const card = document.createElement('article');
       card.className = 'vocab-card';
 
-      const hiMeaning = item.meanings?.hi || "N/A";
-      const bnMeaning = item.meanings?.bn || "N/A";
+      const hiMeaning = item.meanings?.hi || item.v1_hi || "N/A";
+      const bnMeaning = item.meanings?.bn || item.v1_bn || "N/A";
       const meaningsHTML = buildMeaningsBlock(hiMeaning, bnMeaning);
 
-      // Render Verb Forms Card (V1 - V5)
       if (window.AppState.currentSection === 'verbs') {
         const v1 = item.v1 || item.word || '';
         const v2 = item.v2 || '—';
@@ -1154,26 +1193,11 @@
           </div>
 
           <div class="verb-forms-grid">
-            <div class="v-box" onclick="playSpeech('${escapeQuotes(v1)}', 'en-US', this)" title="Tap to pronounce V1">
-              <span class="v-tag">Base (V1)</span>
-              <span class="v-word">${escapeHTML(v1)}</span>
-            </div>
-            <div class="v-box" onclick="playSpeech('${escapeQuotes(v2)}', 'en-US', this)" title="Tap to pronounce V2">
-              <span class="v-tag">Past (V2)</span>
-              <span class="v-word">${escapeHTML(v2)}</span>
-            </div>
-            <div class="v-box" onclick="playSpeech('${escapeQuotes(v3)}', 'en-US', this)" title="Tap to pronounce V3">
-              <span class="v-tag">Participle (V3)</span>
-              <span class="v-word">${escapeHTML(v3)}</span>
-            </div>
-            <div class="v-box" onclick="playSpeech('${escapeQuotes(v4)}', 'en-US', this)" title="Tap to pronounce V4">
-              <span class="v-tag">-ing (V4)</span>
-              <span class="v-word">${escapeHTML(v4)}</span>
-            </div>
-            <div class="v-box" onclick="playSpeech('${escapeQuotes(v5)}', 'en-US', this)" title="Tap to pronounce V5">
-              <span class="v-tag">s/es (V5)</span>
-              <span class="v-word">${escapeHTML(v5)}</span>
-            </div>
+            ${buildVerbBoxHTML('Base (V1)', v1, item.v1_bn || bnMeaning, item.v1_hi || hiMeaning)}
+            ${buildVerbBoxHTML('Past (V2)', v2, item.v2_bn || '', item.v2_hi || '')}
+            ${buildVerbBoxHTML('Participle (V3)', v3, item.v3_bn || '', item.v3_hi || '')}
+            ${buildVerbBoxHTML('-ing (V4)', v4, item.v4_bn || '', item.v4_hi || '')}
+            ${buildVerbBoxHTML('s/es (V5)', v5, item.v5_bn || '', item.v5_hi || '')}
           </div>
 
           ${meaningsHTML}
@@ -1185,7 +1209,6 @@
         return card;
       }
 
-      // Render Standard Vocabulary / POS Card
       card.innerHTML = `
         <div class="vocab-top-bar">
           <div class="word-heading-wrap">
@@ -1218,7 +1241,6 @@
       return card;
     }
 
-    // Speech Synthesis Engine
     window.playSpeech = function(rawText, langCode, btnElement) {
       if (!rawText || rawText === "N/A" || rawText === "—" || !('speechSynthesis' in window)) {
         return;
